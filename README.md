@@ -1,0 +1,1 @@
+# azure-retail-prices-sdk-for-go
