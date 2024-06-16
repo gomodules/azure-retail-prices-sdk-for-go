@@ -39,7 +39,7 @@ type RetailPricesResult struct {
 	Count              int           `json:"Count"`
 
 	// The URI to fetch the next page of Retail Prices. Call ListNext() with this URI to fetch the next page of Retail Prices
-	NextLink *string
+	NextLink *string `json:"NextPageLink"`
 }
 
 type ResourceSKU struct {
