@@ -2,6 +2,12 @@ package sdk
 
 import "time"
 
+const (
+	UTCFormat       = "\"2006-01-02T15:04:05\""
+	UTCSuffixFormat = "\"2006-01-02T15:04:05Z\""
+	NonUTCFormat    = "\"2006-01-02T15:04:05-0700\""
+)
+
 // RetailPricesClientListOptions contains the optional parameters for the RetailPricesClient.NewListPager method.
 type RetailPricesClientListOptions struct {
 	// Filters are supported for the following fields:
@@ -49,7 +55,7 @@ type ResourceSKU struct {
 	UnitPrice            float64       `json:"unitPrice"`
 	ArmRegionName        string        `json:"armRegionName"`
 	Location             string        `json:"location"`
-	EffectiveStartDate   time.Time     `json:"effectiveStartDate"`
+	EffectiveStartDate   ISO8601Time   `json:"effectiveStartDate"`
 	MeterID              string        `json:"meterId"`
 	MeterName            string        `json:"meterName"`
 	ProductID            string        `json:"productId"`
@@ -65,11 +71,43 @@ type ResourceSKU struct {
 	ArmSkuName           string        `json:"armSkuName"`
 	ReservationTerm      string        `json:"reservationTerm,omitempty"`
 	SavingsPlan          []SavingsPlan `json:"savingsPlan,omitempty"`
-	EffectiveEndDate     time.Time     `json:"effectiveEndDate,omitempty"`
+	EffectiveEndDate     ISO8601Time   `json:"effectiveEndDate,omitempty"`
 }
 
 type SavingsPlan struct {
 	UnitPrice   float64 `json:"unitPrice"`
 	RetailPrice float64 `json:"retailPrice"`
 	Term        string  `json:"term"`
+}
+
+type ISO8601Time struct {
+	time.Time
+}
+
+func (t *ISO8601Time) MarshalJSON() ([]byte, error) {
+	if t.Time.Location() == time.UTC {
+		val := t.Format(UTCFormat)
+		return []byte(val), nil
+	}
+	val := t.Format(NonUTCFormat)
+	return []byte(val), nil
+}
+
+func (t *ISO8601Time) UnmarshalJSON(b []byte) error {
+	val, err := time.Parse(UTCFormat, string(b))
+	if err == nil {
+		t.Time = val
+		return nil
+	}
+	val, err = time.Parse(UTCSuffixFormat, string(b))
+	if err == nil {
+		t.Time = val
+		return nil
+	}
+	val, err = time.Parse(NonUTCFormat, string(b))
+	if err == nil {
+		t.Time = val
+		return nil
+	}
+	return err
 }
