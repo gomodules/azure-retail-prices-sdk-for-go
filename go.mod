@@ -1,6 +1,6 @@
 module gomodules.xyz/azure-retail-prices-sdk-for-go
 
-go 1.22
+go 1.25.0
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.11.1
@@ -10,6 +10,6 @@ require (
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.6.0 // indirect
 	github.com/Azure/go-autorest v14.2.0+incompatible // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
 )
